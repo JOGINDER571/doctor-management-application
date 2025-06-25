@@ -4,11 +4,11 @@ import { useAppContext } from "../context/AppContext";
 import type { DoctorInterface } from "../assets/assets";
 import { specialityData } from "../assets/assets";
 const Doctors = () => {
-
   const navigate = useNavigate();
   const { speciality } = useParams();
   const { doctors } = useAppContext();
   const [filterDoc, setFilterDoc] = useState<DoctorInterface[]>([]);
+  const [showFilter, setShowFilter] = useState<boolean>(false);
 
   const applyFilter = () => {
     if (speciality) {
@@ -26,7 +26,15 @@ const Doctors = () => {
     <div>
       <p className="text-gray-600">Browse through the doctors specialist.</p>
       <div className="flex flex-col md:flex-row items-start gap-4 mt-5">
-        <div className="flex flex-col gap-4 text-sm text-gray-600">
+        <button
+          onClick={() => setShowFilter((prev) => !prev)}
+          className={`px-3 py-1 sm:hidden rounded text-sm transition-all duration-200 ${
+            showFilter ? "bg-primary text-white" : "text-gray-600 font-medium"
+          }`}
+        >
+          Filter
+        </button>
+        <div className={`flex flex-col gap-4 text-sm text-gray-600 ${showFilter ? "flex" : "hidden sm:flex"}`}>
           {specialityData.map((item, index) => (
             <p
               key={index}

@@ -6,6 +6,7 @@
 }
 
 @theme inline {
+    /* --color-primary: linear-gradient(to right, #74ebd5 0%, #9face6 100%); */
     --color-primary: #5f6FFF;
 }
 
