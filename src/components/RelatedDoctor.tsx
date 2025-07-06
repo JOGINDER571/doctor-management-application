@@ -15,7 +15,7 @@ const RelatedDoctor: React.FC<RelatedDoctorProps> = ({ docId, speciality }) => {
   useEffect(() => {
     if (doctors.length > 0 && speciality) {
       const docData = doctors.filter(
-        (item) => item.speciality === speciality && item._id !== docId
+        (item) => item.speciality === speciality && item.id !== docId
       );
       setLelDoc(docData);
     }
@@ -30,7 +30,7 @@ const RelatedDoctor: React.FC<RelatedDoctorProps> = ({ docId, speciality }) => {
         {relDoc.slice(0, 5).map((item, index) => (
           <div
             onClick={() => {
-              navigate(`/appointment/${item._id}`);
+              navigate(`/appointment/${item.id}`);
               scrollTo(0, 0);
             }}
             key={index}

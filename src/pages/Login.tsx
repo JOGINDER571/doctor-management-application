@@ -1,33 +1,40 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { UserService } from "../services/UserService";
+import { toast } from "react-toastify";
+import { useAuth } from "../context/AuthContext";
+import useLoading from "../hooks/useLoading";
+import Loader from "../components/Loader";
+import { useNavigate } from "react-router-dom";
 
 interface FormValues {
-  fullName: string;
+  name: string;
   email: string;
   password: string;
 }
 
 interface FormErrors {
-  fullName?: string;
+  name?: string;
   email?: string;
   password?: string;
 }
 
 const Login: React.FC = () => {
+  const navigate = useNavigate();
+  const { setToken } = useAuth();
+  const { loading, showLoader, hideLoader } = useLoading();
   const [formValues, setFormValues] = useState<FormValues>({
-    fullName: "",
+    name: "",
     email: "",
     password: "",
   });
 
   const [formErrors, setFormErrors] = useState<FormErrors>({});
-  const [submitted, setSubmitted] = useState<boolean>(false);
   const [state, setState] = useState<string>("Sign Up");
 
   const validate = (): FormErrors => {
     const errors: FormErrors = {};
-    if (!formValues.fullName.trim()) {
-      errors.fullName = "Full name is required";
+    if (state === "Sign Up" && !formValues.name.trim()) {
+      errors.name = "Full name is required";
     }
 
     if (!formValues.email.trim()) {
@@ -50,21 +57,39 @@ const Login: React.FC = () => {
     setFormValues({ ...formValues, [name]: value });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
     const errors = validate();
     setFormErrors(errors);
 
-    if (Object.keys(errors).length === 0) {
-      console.log("Form submitted", formValues);
-      setSubmitted(true);
-    } else {
-      setSubmitted(false);
+    try {
+      if (Object.keys(errors).length === 0) {
+        showLoader();
+        if (state === "Sign Up") {
+          const response = await UserService.createUser(formValues);
+          toast.success(response.data.message);
+          setState("Login");
+        } else {
+          const response = await UserService.loginUser(formValues);
+          setToken(response.data.data[0]);
+          localStorage.setItem("token", response.data.data[0]);
+          toast.success(response.data.message);
+          navigate("/");
+        }
+      }
+
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+    } finally {
+      hideLoader();
     }
   };
 
   return (
     <div className="flex items-center justify-center bg-gray-50 p-4">
+      {loading && <Loader />}
       <form
         onSubmit={handleSubmit}
         className="bg-white rounded-lg shadow-md w-full max-w-sm p-6"
@@ -82,16 +107,16 @@ const Login: React.FC = () => {
               Full Name
             </label>
             <input
-              name="fullName"
+              name="name"
               type="text"
-              value={formValues.fullName}
+              value={formValues.name}
               onChange={handleChange}
               className={`mt-1 block w-full px-3 py-2 border ${
-                formErrors.fullName ? "border-red-500" : "border-gray-300"
+                formErrors.name ? "border-red-500" : "border-gray-300"
               } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
             />
-            {formErrors.fullName && (
-              <p className="text-sm text-red-600 mt-1">{formErrors.fullName}</p>
+            {formErrors.name && (
+              <p className="text-sm text-red-600 mt-1">{formErrors.name}</p>
             )}
           </div>
         )}
@@ -157,12 +182,6 @@ const Login: React.FC = () => {
             >
               Click here
             </span>
-          </p>
-        )}
-
-        {submitted && (
-          <p className="text-green-600 text-center mt-4">
-            Account created successfully!
           </p>
         )}
       </form>

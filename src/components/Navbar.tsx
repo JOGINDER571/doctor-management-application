@@ -2,12 +2,20 @@ import { assets } from "../assets/assets.tsx";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.tsx";
 import { useState } from "react";
+import { useAppContext } from "../context/AppContext.tsx";
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
-  const { token, login, logout } = useAuth();
+  const { token, setToken } = useAuth();
   const [showMenu, setShowMenu] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
-  console.log(showDropdown);
+  const { userInfo } = useAppContext();
+
+  const logout = () => {
+    setToken("");
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
   return (
     <div className="flex justify-between items-center py-4 mb-5 border-b-2 border-b-gray-300">
       <NavLink to={"/"}>
@@ -40,7 +48,7 @@ const Navbar: React.FC = () => {
             >
               <img
                 className="w-8 rounded-full"
-                src={assets.profile_pic}
+                src={userInfo.image ?? assets.profile_pic}
                 alt="profile_image"
               />
               <img
@@ -80,7 +88,6 @@ const Navbar: React.FC = () => {
         ) : (
           <button
             onClick={() => {
-              login();
               navigate("/login");
             }}
             className="py-3 px-8 text-[#fff] rounded-full bg-primary cursor-pointer font-light hidden md:block"

@@ -1,32 +1,23 @@
-import React, { createContext, useState, useContext} from "react";
+import React, { createContext, useState, useContext } from "react";
 
 // Define types
 interface AuthContextType {
-  token: boolean;
-  login: () => void;
-  logout: () => void;
+  token: string;
+  setToken: React.Dispatch<React.SetStateAction<string>>;
 }
 
 // Create context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 // Provider component
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [token, setToken] = useState<boolean>(() => {
-    return localStorage.getItem("token") === "true";
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [token, setToken] = useState<string>(() => {
+    return localStorage.getItem("token") || "";
   });
 
-  const login = () => {
-    setToken(true);
-    localStorage.setItem("token", "true");
-  };
-
-  const logout = () => {
-    setToken(false);
-    localStorage.setItem("token", "false");
-  };
-
   return (
-    <AuthContext.Provider value={{ token, login, logout }}>
+    <AuthContext.Provider value={{ token, setToken }}>
       {children}
     </AuthContext.Provider>
   );

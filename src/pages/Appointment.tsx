@@ -19,7 +19,7 @@ const Appointment: React.FC = () => {
   const [slotTime, setSlotTime] = useState<string>("");
 
   const getDocInfo = () => {
-    setDocInfo(doctors.find((item) => item._id === docId));
+    setDocInfo(doctors.find((item) => item.id === parseInt(docId)));
   };
 
   useEffect(() => {

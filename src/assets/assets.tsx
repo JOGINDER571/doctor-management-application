@@ -87,7 +87,7 @@ export const specialityData = [
 ];
 
 export interface DoctorInterface {
-  _id: string;
+  id: number;
   name: string;
   image: string;
   speciality: string;
