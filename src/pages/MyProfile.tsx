@@ -8,29 +8,11 @@ import Loader from "../components/Loader";
 import useLoading from "../hooks/useLoading";
 
 const MyProfile = () => {
-  const { userInfo, setUserInfo } = useAppContext();
+  const { userInfo, setUserInfo, fetchUser } = useAppContext();
   const { loading, showLoader, hideLoader } = useLoading();
   const { token } = useAuth();
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [image, setImage] = useState<any>("");
-
-  const fetchUser = async () => {
-    try {
-      showLoader();
-      const response = await UserService.getUser(token);
-      if (response.data.data) {
-        setUserInfo(response.data.data);
-      }
-    } catch (error: any) {
-      toast.error(error.response.data.message);
-    } finally {
-      hideLoader();
-    }
-  };
-
-  useEffect(() => {
-    fetchUser();
-  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -169,7 +151,7 @@ const MyProfile = () => {
 
                 <input
                   type="text"
-                  value={userInfo.address.line1}
+                  value={userInfo.address.line2}
                   onChange={(e) => handleChange(e, "address", "line2")}
                   className="border border-gray-300 rounded px-2 py-1 w-full"
                   placeholder="Address"

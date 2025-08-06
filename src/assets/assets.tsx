@@ -96,6 +96,7 @@ export interface DoctorInterface {
   about: string;
   fees: number;
   address: any;
+  slotsBooked?: { [date: string]: string[] };
 }
 
 export const doctors = [

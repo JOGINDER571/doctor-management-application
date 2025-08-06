@@ -10,11 +10,19 @@ import Appointment from "./pages/Appointment";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { ToastContainer } from "react-toastify";
+import { useEffect } from "react";
+import { useAppContext } from "./context/AppContext";
 
 const App: React.FC = () => {
+  const { fetchUser } = useAppContext();
+  const token = localStorage.getItem("token");
+  useEffect(() => {
+    if (!token) return;
+    fetchUser();
+  }, [token]);
   return (
     <div className="mx-4 sm:mx-[10%]">
-      <ToastContainer/>
+      <ToastContainer />
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />

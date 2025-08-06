@@ -20,7 +20,7 @@ const Doctors = () => {
 
   useEffect(() => {
     applyFilter();
-  }, [speciality]);
+  }, [speciality, doctors]);
 
   return (
     <div>
@@ -34,7 +34,11 @@ const Doctors = () => {
         >
           Filter
         </button>
-        <div className={`flex flex-col gap-4 text-sm text-gray-600 ${showFilter ? "flex" : "hidden sm:flex"}`}>
+        <div
+          className={`flex flex-col gap-4 text-sm text-gray-600 ${
+            showFilter ? "flex" : "hidden sm:flex"
+          }`}
+        >
           {specialityData.map((item, index) => (
             <p
               key={index}

@@ -15,7 +15,7 @@ const RelatedDoctor: React.FC<RelatedDoctorProps> = ({ docId, speciality }) => {
   useEffect(() => {
     if (doctors.length > 0 && speciality) {
       const docData = doctors.filter(
-        (item) => item.speciality === speciality && item.id !== docId
+        (item) => item.speciality === speciality && item.id !== parseInt(docId)
       );
       setLelDoc(docData);
     }

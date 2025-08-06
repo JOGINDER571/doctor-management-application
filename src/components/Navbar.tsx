@@ -47,7 +47,7 @@ const Navbar: React.FC = () => {
               className="flex items-center justify-center gap-1.5"
             >
               <img
-                className="w-8 rounded-full"
+                className="w-[40px] h-[40px] object-cover rounded-full"
                 src={userInfo.image ?? assets.profile_pic}
                 alt="profile_image"
               />
